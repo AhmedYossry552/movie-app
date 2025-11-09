@@ -1,0 +1,54 @@
+  <div class="card glass-card hover-scale animate-fade-in group cursor-pointer">
+      <figure class="relative overflow-hidden">
+        <img 
+          [src]="getImageUrl()" 
+          [alt]="movie.title"
+          class="w-full h-96 object-cover transition-transform duration-500 group-hover:scale-110"
+          loading="lazy"
+        />
+        <div class="gradient-overlay"></div>
+        
+        <!-- Wishlist Heart Button -->
+        <button 
+          (click)="toggleWishlist($event)"
+          class="absolute top-4 right-4 btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none z-10"
+        >
+          @if (isInWishlist()) {
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-primary" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          }
+        </button>
+
+        <!-- Rating Badge -->
+        <div class="absolute top-4 left-4 badge badge-primary badge-lg font-bold">
+          ⭐ {{movie.vote_average | number:'1.1-1'}}
+        </div>
+
+        <!-- Quick Info on Hover -->
+        <div class="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+          <h3 class="text-lg font-bold text-white line-clamp-1">{{movie.title}}</h3>
+          <p class="text-sm text-gray-300">{{movie.release_date | date:'yyyy'}}</p>
+        </div>
+      </figure>
+      
+      <div class="card-body p-4">
+        <h2 class="card-title text-base line-clamp-1">
+          {{movie.title}}
+        </h2>
+        <p class="text-sm opacity-70 line-clamp-2">{{movie.overview}}</p>
+        
+        <div class="card-actions justify-between items-center mt-2">
+          <div class="text-xs opacity-60">
+            {{movie.release_date | date:'mediumDate'}}
+          </div>
+          <a [routerLink]="['/movies', movie.id]" class="btn btn-primary btn-sm">
+            Details
+          </a>
+        </div>
+      </div>
+    </div>

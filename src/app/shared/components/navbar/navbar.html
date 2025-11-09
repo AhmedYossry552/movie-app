@@ -1,0 +1,104 @@
+
+ <nav class="navbar bg-base-200/80 backdrop-blur-md sticky top-0 z-50 shadow-lg">
+      <div class="navbar-start">
+        <div class="dropdown">
+          <label tabindex="0" class="btn btn-ghost lg:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+            </svg>
+          </label>
+          <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-200 rounded-box w-52">
+            <li><a routerLink="/movies" routerLinkActive="active">Movies</a></li>
+            <li><a routerLink="/search" routerLinkActive="active">Search</a></li>
+            <li><a routerLink="/wishlist" routerLinkActive="active">Wishlist</a></li>
+          </ul>
+        </div>
+        <a routerLink="/" class="btn btn-ghost normal-case text-xl">
+          <span class="text-primary font-bold">🎬 MovieApp</span>
+        </a>
+      </div>
+      
+      <div class="navbar-center hidden lg:flex">
+        <ul class="menu menu-horizontal px-1">
+          <li>
+            <a routerLink="/movies" routerLinkActive="active" 
+               class="transition-all duration-300">
+              Movies
+            </a>
+          </li>
+          <li>
+            <a routerLink="/search" routerLinkActive="active"
+               class="transition-all duration-300">
+              Search
+            </a>
+          </li>
+          <li>
+            <a routerLink="/wishlist" routerLinkActive="active"
+               class="transition-all duration-300">
+              Wishlist
+              @if (wishlistCount() > 0) {
+                <span class="badge badge-primary badge-sm">{{wishlistCount()}}</span>
+              }
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="navbar-end gap-2">
+        <!-- Language Selector -->
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="btn btn-ghost btn-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+            </svg>
+          </label>
+          <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 mt-4">
+            @for (lang of supportedLanguages; track lang) {
+              <li>
+                <a (click)="changeLanguage(lang)" 
+                   [class.active]="currentLanguage() === lang">
+                  {{getLanguageName(lang)}}
+                </a>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button (click)="toggleTheme()" class="btn btn-ghost btn-circle">
+          @if (isDarkMode()) {
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          }
+        </button>
+
+        <!-- User Menu / Auth -->
+        @if (isAuthenticated()) {
+          <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+              <div class="w-10 rounded-full">
+                <img [src]="currentUser()?.avatar" [alt]="currentUser()?.name" />
+              </div>
+            </label>
+            <ul tabindex="0" class="menu dropdown-content mt-3 z-[1] p-2 shadow bg-base-200 rounded-box w-52">
+              <li>
+                <a routerLink="/account" class="justify-between">
+                  Profile
+                </a>
+              </li>
+              <li><a (click)="logout()">Logout</a></li>
+            </ul>
+          </div>
+        } @else {
+          <a routerLink="/auth/login" class="btn btn-primary btn-sm">
+            Login
+          </a>
+        }
+      </div>
+    </nav>
+  
