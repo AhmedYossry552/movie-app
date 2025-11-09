@@ -1,0 +1,89 @@
+ <div class="container mx-auto px-4 py-8 animate-fade-in">
+      <!-- Search Header -->
+      <div class="max-w-4xl mx-auto mb-12">
+        <h1 class="text-4xl font-bold text-center mb-8">Search Movies</h1>
+        
+        <!-- Search Input -->
+        <div class="relative">
+          <input 
+            type="text"
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange($event)"
+            placeholder="Search for movies..."
+            class="input input-bordered input-lg w-full pl-14 pr-4"
+            autofocus
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          
+          @if (searchQuery && !loading()) {
+            <button 
+              (click)="clearSearch()"
+              class="btn btn-circle btn-ghost btn-sm absolute right-2 top-1/2 -translate-y-1/2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          }
+        </div>
+
+        @if (searchQuery && !loading()) {
+          <p class="text-center mt-4 text-gray-400">
+            Found {{results().length}} results for "{{searchQuery}}"
+          </p>
+        }
+      </div>
+
+      <!-- Results -->
+      @if (loading()) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          @for (item of [1,2,3,4,5,6,7,8,9,10]; track item) {
+            <app-skeleton-card />
+          }
+        </div>
+      } @else if (searchQuery && results().length > 0) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          @for (movie of results(); track movie.id) {
+            <app-movie-card [movie]="movie" />
+          }
+        </div>
+
+        <!-- Load More -->
+        @if (hasMore()) {
+          <div class="flex justify-center mt-12">
+            <button 
+              (click)="loadMore()"
+              [disabled]="loadingMore()"
+              class="btn btn-primary btn-wide"
+            >
+              @if (loadingMore()) {
+                <span class="loading loading-spinner"></span>
+                Loading...
+              } @else {
+                Load More
+              }
+            </button>
+          </div>
+        }
+      } @else if (searchQuery && results().length === 0) {
+        <!-- No Results -->
+        <div class="flex flex-col items-center justify-center py-20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="text-2xl font-bold mb-2">No movies found</h3>
+          <p class="text-gray-500">Try a different search term</p>
+        </div>
+      } @else {
+        <!-- Initial State -->
+        <div class="flex flex-col items-center justify-center py-20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 text-gray-600 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+          </svg>
+          <h3 class="text-3xl font-bold mb-2">Search for Movies</h3>
+          <p class="text-gray-500 text-lg">Enter a movie title to get started</p>
+        </div>
+      }
+    </div>

@@ -9,5 +9,5 @@ import { NotificationService } from '../../../core/services/notification.service
   styleUrl: './toast.css',
 })
 export class Toast {
- readonly notificationService = inject(NotificationService);
+  readonly notificationService = inject(NotificationService);
 }

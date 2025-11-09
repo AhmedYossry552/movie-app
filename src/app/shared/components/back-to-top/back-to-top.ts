@@ -8,7 +8,7 @@ import { Component, HostListener, signal } from '@angular/core';
   styleUrl: './back-to-top.css',
 })
 export class BackToTop {
-isVisible = signal(false);
+  isVisible = signal(false);
   @HostListener('window:scroll')
   onWindowScroll(): void {
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;

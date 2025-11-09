@@ -1,0 +1,81 @@
+  <div class="container mx-auto px-4 py-8 animate-fade-in">
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <h1 class="text-4xl font-bold">Now Playing</h1>
+        
+        <!-- Filters -->
+        <div class="flex flex-wrap gap-4">
+          <!-- Genre Filter -->
+          <select [(ngModel)]="selectedGenre" (change)="onFilterChange()" class="select select-bordered">
+            <option value="">All Genres</option>
+            @for (genre of genres(); track genre.id) {
+              <option [value]="genre.id">{{genre.name}}</option>
+            }
+          </select>
+
+          <!-- Sort Options -->
+          <select [(ngModel)]="sortBy" (change)="onSortChange()" class="select select-bordered">
+            <option value="popularity">Popularity</option>
+            <option value="rating">Rating</option>
+            <option value="release_date">Release Date</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Movies Grid -->
+      @if (loading()) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          @for (item of [1,2,3,4,5,6,7,8,9,10]; track item) {
+            <app-skeleton-card />
+          }
+        </div>
+      } @else if (filteredMovies().length > 0) {
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          @for (movie of filteredMovies(); track movie.id) {
+            <app-movie-card [movie]="movie" />
+          }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages() > 1) {
+          <div class="flex justify-center mt-12">
+            <div class="join">
+              <button 
+                class="join-item btn"
+                [disabled]="currentPage() === 1"
+                (click)="previousPage()"
+              >
+                «
+              </button>
+              
+              @for (page of visiblePages(); track page) {
+                <button 
+                  class="join-item btn"
+                  [class.btn-active]="page === currentPage()"
+                  (click)="goToPage(page)"
+                >
+                  {{page}}
+                </button>
+              }
+              
+              <button 
+                class="join-item btn"
+                [disabled]="currentPage() === totalPages()"
+                (click)="nextPage()"
+              >
+                »
+              </button>
+            </div>
+          </div>
+        }
+      } @else {
+        <!-- Empty State -->
+        <div class="flex flex-col items-center justify-center py-20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+          </svg>
+          <h3 class="text-2xl font-bold mb-2">No movies found</h3>
+          <p class="text-gray-500">Try changing your filters</p>
+        </div>
+      }
+    </div>

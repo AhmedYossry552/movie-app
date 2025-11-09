@@ -11,7 +11,7 @@ import { AuthService, TmdbApiService, WishlistService } from '../../../core/serv
   styleUrl: './movie-card.css',
 })
 export class MovieCard {
- @Input({ required: true }) movie!: Movie;
+  @Input({ required: true }) movie!: Movie;
   @Output() wishlistToggle = new EventEmitter<Movie>();
 
   private readonly tmdbService = inject(TmdbApiService);

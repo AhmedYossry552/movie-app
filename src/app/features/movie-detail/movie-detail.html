@@ -1,0 +1,145 @@
+@if (loading()) {
+      <div class="flex justify-center items-center min-h-screen">
+        <div class="loading loading-spinner loading-lg text-primary"></div>
+      </div>
+    } @else if (movie()) {
+      <div class="animate-fade-in">
+        <!-- Backdrop Hero Section -->
+        <div class="relative h-[60vh] md:h-[70vh] overflow-hidden">
+          <img 
+            [src]="getBackdropUrl()" 
+            [alt]="movie()!.title"
+            class="w-full h-full object-cover"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/60 to-transparent"></div>
+          
+          <!-- Movie Info Overlay -->
+          <div class="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+            <div class="container mx-auto">
+              <div class="flex flex-col md:flex-row gap-8 items-end">
+                <!-- Poster -->
+                <img 
+                  [src]="getPosterUrl()" 
+                  [alt]="movie()!.title"
+                  class="w-48 md:w-64 rounded-2xl shadow-2xl hidden md:block"
+                />
+                
+                <!-- Info -->
+                <div class="flex-1">
+                  <h1 class="text-4xl md:text-6xl font-bold mb-4">{{movie()!.title}}</h1>
+                  @if (movie()!.tagline) {
+                    <p class="text-xl italic text-gray-400 mb-4">{{movie()!.tagline}}</p>
+                  }
+                  
+                  <div class="flex flex-wrap gap-4 items-center mb-4">
+                    <div class="badge badge-primary badge-lg">⭐ {{movie()!.vote_average | number:'1.1-1'}}</div>
+                    <span class="text-gray-400">{{movie()!.release_date | date:'yyyy'}}</span>
+                    <span class="text-gray-400">{{movie()!.runtime}} min</span>
+                    <div class="flex gap-2">
+                      @for (genre of movie()!.genres.slice(0, 3); track genre.id) {
+                        <span class="badge badge-outline">{{genre.name}}</span>
+                      }
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="flex gap-4">
+                    <button 
+                      (click)="toggleWishlist()"
+                      [class.btn-primary]="isInWishlist()"
+                      class="btn"
+                    >
+                      @if (isInWishlist()) {
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                        </svg>
+                        In Wishlist
+                      } @else {
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        Add to Wishlist
+                      }
+                    </button>
+                    
+                    @if (trailer()) {
+                      <a href="#trailer" class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Watch Trailer
+                      </a>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Section -->
+        <div class="container mx-auto px-4 py-12">
+          <!-- Overview -->
+          <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-4">Overview</h2>
+            <p class="text-lg leading-relaxed text-gray-300">{{movie()!.overview}}</p>
+          </section>
+
+          <!-- Trailer -->
+          @if (trailer()) {
+            <section id="trailer" class="mb-12">
+              <h2 class="text-3xl font-bold mb-6">Trailer</h2>
+              <div class="aspect-video rounded-2xl overflow-hidden shadow-2xl">
+                <iframe 
+                  [src]="getTrailerUrl()"
+                  class="w-full h-full"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </section>
+          }
+
+          <!-- Movie Info Grid -->
+          <section class="mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="glass-card p-6">
+                <h3 class="text-sm text-gray-400 mb-2">Status</h3>
+                <p class="text-xl font-semibold">{{movie()!.status}}</p>
+              </div>
+              <div class="glass-card p-6">
+                <h3 class="text-sm text-gray-400 mb-2">Budget</h3>
+                <p class="text-xl font-semibold">{{formatCurrency(movie()!.budget)}}</p>
+              </div>
+              <div class="glass-card p-6">
+                <h3 class="text-sm text-gray-400 mb-2">Revenue</h3>
+                <p class="text-xl font-semibold">{{formatCurrency(movie()!.revenue)}}</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Recommendations -->
+          @if (recommendations().length > 0) {
+            <section>
+              <h2 class="text-3xl font-bold mb-6">You May Also Like</h2>
+              <div class="overflow-x-auto pb-4">
+                <div class="flex gap-6" style="width: max-content;">
+                  @for (movie of recommendations().slice(0, 10); track movie.id) {
+                    <div class="w-64 flex-shrink-0">
+                      <app-movie-card [movie]="movie" />
+                    </div>
+                  }
+                </div>
+              </div>
+            </section>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="flex flex-col items-center justify-center min-h-screen">
+        <h2 class="text-2xl font-bold mb-4">Movie not found</h2>
+        <button (click)="goBack()" class="btn btn-primary">Go Back</button>
+      </div>
+    }

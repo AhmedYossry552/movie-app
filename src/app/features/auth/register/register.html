@@ -1,0 +1,132 @@
+ <div class="min-h-screen flex items-center justify-center px-4 py-12">
+      <div class="card w-full max-w-md glass-card shadow-2xl animate-fade-in">
+        <div class="card-body">
+          <!-- Logo/Header -->
+          <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-2">🎬 MovieApp</h1>
+            <p class="text-gray-400">Create your account</p>
+          </div>
+
+          <!-- Register Form -->
+          <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+            <!-- Name -->
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Full Name</span>
+              </label>
+              <input 
+                type="text" 
+                name="name"
+                [(ngModel)]="formData.name"
+                placeholder="John Doe"
+                class="input input-bordered"
+                required
+                minlength="2"
+                #name="ngModel"
+              />
+              @if (name.invalid && (name.dirty || name.touched)) {
+                <label class="label">
+                  <span class="label-text-alt text-error">Name is required (min 2 characters)</span>
+                </label>
+              }
+            </div>
+
+            <!-- Email -->
+            <div class="form-control mt-4">
+              <label class="label">
+                <span class="label-text">Email</span>
+              </label>
+              <input 
+                type="email" 
+                name="email"
+                [(ngModel)]="formData.email"
+                placeholder="email@example.com"
+                class="input input-bordered"
+                required
+                email
+                #email="ngModel"
+              />
+              @if (email.invalid && (email.dirty || email.touched)) {
+                <label class="label">
+                  <span class="label-text-alt text-error">Valid email required</span>
+                </label>
+              }
+            </div>
+
+            <!-- Password -->
+            <div class="form-control mt-4">
+              <label class="label">
+                <span class="label-text">Password</span>
+              </label>
+              <input 
+                type="password" 
+                name="password"
+                [(ngModel)]="formData.password"
+                placeholder="••••••••"
+                class="input input-bordered"
+                required
+                minlength="6"
+                #password="ngModel"
+              />
+              @if (password.invalid && (password.dirty || password.touched)) {
+                <label class="label">
+                  <span class="label-text-alt text-error">
+                    Password must be at least 6 characters
+                  </span>
+                </label>
+              }
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-control mt-4">
+              <label class="label">
+                <span class="label-text">Confirm Password</span>
+              </label>
+              <input 
+                type="password" 
+                name="confirmPassword"
+                [(ngModel)]="formData.confirmPassword"
+                placeholder="••••••••"
+                class="input input-bordered"
+                required
+                #confirmPassword="ngModel"
+              />
+              @if (formData.password !== formData.confirmPassword && confirmPassword.touched) {
+                <label class="label">
+                  <span class="label-text-alt text-error">Passwords do not match</span>
+                </label>
+              }
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-control mt-6">
+              <button 
+                type="submit" 
+                class="btn btn-primary"
+                [disabled]="registerForm.invalid || formData.password !== formData.confirmPassword || loading()"
+              >
+                @if (loading()) {
+                  <span class="loading loading-spinner"></span>
+                  Creating account...
+                } @else {
+                  Register
+                }
+              </button>
+            </div>
+          </form>
+
+          <!-- Divider -->
+          <div class="divider">OR</div>
+
+          <!-- Login Link -->
+          <div class="text-center">
+            <p class="text-sm">
+              Already have an account?
+              <a routerLink="/auth/login" class="link link-primary font-semibold">
+                Sign in here
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
